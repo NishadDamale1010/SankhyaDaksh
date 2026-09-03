@@ -35,6 +35,7 @@ app.use(helmet({
 
 const allowedOrigins = [
   'http://localhost:5173',
+  'https://sankhya-daksh.vercel.app',
   'https://campus-os-ai-chi.vercel.app',
   env.CLIENT_URL
 ];

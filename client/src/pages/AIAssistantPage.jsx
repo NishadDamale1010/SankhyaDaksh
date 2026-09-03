@@ -28,7 +28,8 @@ export default function AIAssistantPage() {
     setMessages((prev) => [...prev, { sender: 'bot', text: '...' }]);
 
     try {
-      const response = await fetch('http://localhost:8000/chat', {
+      const aimlUrl = import.meta.env.VITE_AIML_URL || 'http://localhost:8000';
+      const response = await fetch(`${aimlUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: text, context: '' })
