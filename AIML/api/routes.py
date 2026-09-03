@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+import os
+import shutil
 from pydantic import BaseModel
 from typing import Optional, Any, List
 import json
@@ -14,8 +16,10 @@ from rag.prompt import (
     build_pyq_prompt,
     build_syllabus_prompt,
     build_paper_prompt,
-    build_planner_prompt
+    build_planner_prompt,
+    build_quiz_prompt
 )
+from document.parser import extract_text_from_pdf
 from rag.pipeline import answer_question
 from document.chunker import chunk_text
 from core.embeddings import get_embedding
@@ -378,3 +382,52 @@ def search(req: SearchRequest):
     except Exception as e:
         print(f"Semantic search failed: {e}")
         return {"results": []}
+
+@router.post("/generate-quiz")
+async def generate_quiz(
+    file: UploadFile = File(...),
+    num_questions: int = Form(5)
+):
+    temp_file_path = f"temp_{file.filename}"
+    try:
+        with open(temp_file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Extract text from the uploaded PDF
+        text = extract_text_from_pdf(temp_file_path)
+        
+        # Build prompt and query Groq
+        prompt = build_quiz_prompt(text, num_questions)
+        answer = ask_groq(prompt)
+        
+        # Extract JSON array from the response using a regex (similar to flashcards)
+        match = re.search(r"```(?:json)?\s*(\[.*?\])\s*```", answer, re.DOTALL)
+        if match:
+            target_str = match.group(1)
+        else:
+            start = answer.find('[')
+            end = answer.rfind(']')
+            if start != -1 and end != -1:
+                target_str = answer[start:end+1]
+            else:
+                target_str = answer
+                
+        sanitized_str = re.sub(r',\s*([\]}])', r'\1', target_str)
+        
+        try:
+            quiz_data = json.loads(sanitized_str)
+        except Exception:
+            import ast
+            try:
+                quiz_data = ast.literal_eval(sanitized_str)
+            except Exception:
+                raise HTTPException(status_code=500, detail="Failed to parse generated quiz format.")
+                
+        return quiz_data
+    
+    except Exception as e:
+        print(f"Quiz generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)

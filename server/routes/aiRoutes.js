@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const aiController = require('../controllers/aiController');
+const uploadMiddleware = require('../middleware/upload');
 
 // Temporary middleware to mock req.user since auth is disabled for now
 const mockAuth = (req, res, next) => {
@@ -19,5 +20,6 @@ router.post('/analyze-pyq', mockAuth, aiController.analyzePYQ);
 router.post('/analyze-syllabus', mockAuth, aiController.analyzeSyllabus);
 router.post('/generate-paper', mockAuth, aiController.generateQuestionPaper);
 router.post('/study-plan', mockAuth, aiController.generateStudyPlan);
+router.post('/upload-pdf-quiz', mockAuth, uploadMiddleware, aiController.generateQuizFromPdf);
 
 module.exports = router;

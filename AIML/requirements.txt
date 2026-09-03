@@ -7,3 +7,4 @@ scikit-learn
 numpy
 pydantic
 requests
+python-multipart

@@ -132,3 +132,27 @@ Context / Syllabus:
 
 Study Plan:
 """
+
+def build_quiz_prompt(text, num_questions):
+    context_str = text[:6000] if text else "No document text provided."
+    return f"""
+You are an AI assistant for CampusOS. Generate exactly {num_questions} multiple-choice questions (MCQs) based on the provided text.
+
+STRICT FORMAT INSTRUCTIONS:
+Output ONLY a raw JSON array of objects with exact keys "id", "question", "options" (an array of 4 strings), "answer" (the correct string matching one of the options), and "explanation".
+Example format:
+[
+  {{
+    "id": 1,
+    "question": "What is the capital of France?",
+    "options": ["Paris", "London", "Berlin", "Madrid"],
+    "answer": "Paris",
+    "explanation": "Paris is the capital and most populous city of France."
+  }}
+]
+
+Context:
+{context_str}
+
+Quiz JSON:
+"""

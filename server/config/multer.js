@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
     cb(null, dest);
   },
   filename: function (req, file, cb) {
-    const userId = req.user ? req.user._id.toString() : 'guest';
+    const userId = req.user ? (req.user._id ? req.user._id.toString() : req.user.id || 'guest') : 'guest';
     const filename = generateUniqueFilename(file.originalname, userId);
     cb(null, filename);
   }

@@ -19,10 +19,10 @@ def ask_openrouter(prompt):
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {"Authorization": f"Bearer {key}"}
     models_to_try = [
-        "google/gemma-2-9b-it:free",
+        "qwen/qwen3.8-27b",
+        "openai/gpt-oss-20b",
         "meta-llama/llama-3.1-8b-instruct:free",
-        "qwen/qwen-2.5-72b-instruct:free",
-        "meta-llama/llama-3-8b-instruct:free"
+        "qwen/qwen-2.5-72b-instruct:free"
     ]
     last_err = None
     for model in models_to_try:
@@ -80,7 +80,7 @@ def ask_groq_direct(prompt):
     if not client:
         raise ValueError("GROQ_API_KEY not set")
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3
     )

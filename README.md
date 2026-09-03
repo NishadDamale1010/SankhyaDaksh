@@ -1,57 +1,75 @@
-# 🚀 SankhyaDaksh
+# SankhyaDaksh
 
-**SankhyaDaksh** is a state-of-the-art, AI-powered learning management and assessment platform built for the modern era. Designed with a stunning premium UI and backed by a powerful LLM-driven intelligence engine, SankhyaDaksh transforms how users interact with educational materials.
+**SankhyaDaksh** is an advanced, AI-powered competency management and assessment platform designed to bridge the gap between continuous learning and objective evaluation. Built with a modern microservices architecture, SankhyaDaksh provides robust tools for capacity building, real-time analytics, and AI-driven content generation tailored for administrators and learners alike.
 
-![SankhyaDaksh](https://via.placeholder.com/1200x600.png?text=SankhyaDaksh+Platform)
+## Key Capabilities
 
-## ✨ Key Features
+- **AI-Driven Assessment Generation:** Automatically generate contextual Multiple Choice Questions (MCQs), flashcards, and study planners directly from uploaded PDF learning materials using Retrieval-Augmented Generation (RAG).
+- **Competency Intelligence:** Real-time capability mapping against organizational roles, highlighting critical knowledge gaps and recommending targeted learning interventions.
+- **Dynamic Copilot Integration:** A context-aware AI assistant capable of semantic search, document summarization, and query resolution, providing instantaneous support to users.
+- **Role-Based Architecture:** Secure, distinct workflows tailored for Administrators, Officers, and Content Trainers.
+- **Premium User Experience:** Built on a responsive, high-performance React frontend utilizing modern design principles (glassmorphism, micro-interactions, and curated data visualizations).
 
-- **🎨 Premium UI/UX:** Built with React, featuring a glassmorphism design system, smooth cubic-bezier micro-animations, and vibrant, harmonious gradients.
-- **🧠 Live AI Assistant:** A real-time AI copilot integrated directly into the platform, capable of semantic context-awareness and dynamic study generation.
-- **🤖 Powered by LLMs:** The backend utilizes the `Groq` and `Gemini` models to provide instantaneous, intelligent responses and dynamic quiz generation.
-- **💼 Role-Based Experiences:** Dedicated flows for Officers, Trainers, and Admins to ensure a tailored journey for every user persona.
-- **📦 Monorepo Architecture:** Clean, modular, and easy-to-maintain codebase containing both the React frontend and Python FastAPI backend.
+## System Architecture
 
-## 📁 Repository Structure
+SankhyaDaksh is developed as a modular monorepo, decoupling the user interface, business logic, and artificial intelligence pipelines to ensure scalability and maintainability.
 
 ```text
 SankhyaDaksh/
-├── client/      # React Frontend (Vite, Tailwind, Context API)
-├── server/      # Node.js Backend (Express, MongoDB)
-└── AIML/        # Python AI Service (FastAPI, Groq/Gemini, LangChain)
+├── client/      # Frontend Application (React, Vite, Chart.js)
+├── server/      # Core Backend API (Node.js, Express, MongoDB)
+└── AIML/        # AI & Data Pipeline (Python, FastAPI, Groq/Gemini, PyPDF2)
 ```
 
-## 🚀 Getting Started
+## Quick Start Guide
 
-### 1. Start the AI Backend (Python)
-The intelligence of the platform runs on a blazing fast Python FastAPI server.
+To run SankhyaDaksh locally, you will need to initialize the three core services.
+
+### 1. Configure the Environment
+Ensure you have the following API keys and URIs provisioned:
+- MongoDB URI
+- Groq / Gemini API Keys
+
+Create a `.env` file in both the `server/` and `AIML/` directories based on the provided configuration structures.
+
+### 2. Initialize the AI/ML Engine
+The intelligence layer operates on a Python-based FastAPI server.
 
 ```bash
 cd AIML
-# Create and activate a virtual environment (optional but recommended)
+python -m venv venv
+source venv/bin/activate  # Or `venv\Scripts\activate` on Windows
 pip install -r requirements.txt
-# Create a .env file and add your API Keys (GROQ_API_KEY, GEMINI_API_KEY)
 uvicorn app:app --port 8000
 ```
-*The AI server will run at `http://localhost:8000`*
+*The AI microservice will be available at `http://localhost:8000`.*
 
-### 2. Start the Frontend (React / Vite)
-The premium user interface is built with React and Vite.
+### 3. Initialize the Core API Server
+The Node.js backend handles authentication, data persistence, and acts as an API gateway to the AI engine.
+
+```bash
+cd server
+npm install
+npm run dev
+```
+*The API server will run at `http://localhost:5000`.*
+
+### 4. Initialize the Frontend Client
+The web application is built with React and Vite.
 
 ```bash
 cd client
 npm install
 npm run dev
 ```
-*The web app will run at `http://localhost:5173`*
+*The application will be accessible at `http://localhost:5173`.*
 
-## 🛠️ Technology Stack
-* **Frontend:** React, Vite, Lucide Icons, Modern CSS Variables
-* **AI Backend:** Python, FastAPI, Groq, Google Gemini
-* **Data Layer:** Node.js, Express, MongoDB (Ready for scaling)
+## Technology Stack
 
-## 🏆 Hackathon Ready
-This project was meticulously structured and designed for high-impact demonstrations. With seamless LLM integrations and a jaw-dropping UI, SankhyaDaksh is ready to impress.
+- **Frontend:** React, Vite, Chart.js, Lucide Icons, Context API
+- **Core Backend:** Node.js, Express.js, MongoDB, Mongoose
+- **AI/ML Service:** Python, FastAPI, Groq LLM, LangChain, PyPDF2
+- **Infrastructure:** RESTful APIs, Axios, Multer (File Handling)
 
----
-*Built with ❤️ for the future of learning.*
+## License
+Confidential and Proprietary. All rights reserved.

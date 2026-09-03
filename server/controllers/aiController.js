@@ -500,6 +500,45 @@ class AIController {
       next(error);
     }
   }
+  async generateQuizFromPdf(req, res, next) {
+    try {
+      if (!req.file) {
+        return sendError(res, 'No PDF file uploaded', 400);
+      }
+      
+      const numQuestions = req.body.numQuestions || 5;
+      const env = require('../config/env');
+      const axios = require('axios');
+      const FormData = require('form-data');
+      const fs = require('fs');
+
+      const formData = new FormData();
+      formData.append('file', fs.createReadStream(req.file.path), req.file.originalname);
+      formData.append('num_questions', numQuestions.toString());
+
+      const pythonUrl = env.PYTHON_AI_URL || 'http://localhost:8000';
+      
+      const response = await axios.post(`${pythonUrl}/generate-quiz`, formData, {
+        headers: {
+          ...formData.getHeaders()
+        }
+      });
+
+      // Cleanup local file after sending
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error("Failed to delete temp file:", err);
+      });
+
+      return sendSuccess(res, 'Quiz generated successfully', { questions: response.data }, 200);
+    } catch (error) {
+      console.error('generateQuizFromPdf error:', error.response?.data || error.message);
+      if (req.file && req.file.path) {
+         const fs = require('fs');
+         fs.unlink(req.file.path, () => {});
+      }
+      next(error);
+    }
+  }
 }
 
 module.exports = new AIController();
