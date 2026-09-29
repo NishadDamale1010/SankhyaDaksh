@@ -27,7 +27,7 @@ export function AppProvider({children}) {
   const logout=()=>{setCurrentRole(null);localStorage.removeItem('sankhya_role')}
   const complete=(resource)=>{ const p={...progress,[resource.id]:100}; const e=[{date:'Today',type:'Learning completed',text:`${resource.title} completed — assessment unlocked`,tone:'blue'},...events]; setProgress(p);setEvents(e);persist(competencies,p,e) }
   const submitAssessment=(answers)=>{ const score=Math.round((answers.filter(Boolean).length/3)*100); const before=competencies.find(x=>x.id==='data').current; const boost=Math.min(.55, .12+(score/100)*.45+(progress.r1===100?.12:0)); const c=competencies.map(x=>x.id==='data'?{...x,current:+Math.min(x.required,x.current+boost).toFixed(1),confidence:Math.min(96,x.confidence+10),evidence:`Assessment evidence · ${score}% score, updated today`}:x); const e=[{date:'Today',type:'Competency re-evaluated',text:`Data Interpretation: ${before} → ${c.find(x=>x.id==='data').current} after ${score}% assessment`,tone:'green'},...events]; setCompetencies(c);setEvents(e);persist(c,progress,e);return {score,before,after:c.find(x=>x.id==='data').current} }
-  const user=currentRole==='admin'?{name:'R. K. Verma'}:{name:'Ananya Sharma'}
+  const user=currentRole==='admin'?{name:'R. K. Verma', designation:'Director, DIID'}:{name:'Rajesh Kumar', designation:'Joint Director'}
   const value=useMemo(()=>({currentRole,user,login,logout,competencies,resources,progress,events,complete,submitAssessment}),[currentRole,competencies,progress,events])
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }
